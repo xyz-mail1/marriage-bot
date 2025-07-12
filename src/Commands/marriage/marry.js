@@ -5,6 +5,7 @@ import {
   TextDisplayBuilder,
   SeparatorBuilder,
   SeparatorSpacingSize,
+  Colors,
 } from "discord.js";
 import { connectToDatabase } from "../../Base/mongodb.js";
 import {
@@ -42,9 +43,17 @@ export const commandBase = {
       );
 
       if (unmarried.length < 2) {
-        return await interaction.editReply(
-          "❌ Not enough unmarried members to create a marriage."
-        );
+        const container = new ContainerBuilder()
+          .addTextDisplayComponents(
+            new TextDisplayBuilder({
+              content: "❌ Not enough unmarried members to create a marriage.",
+            })
+          )
+          .setAccentColor(Colors.Red);
+        return await interaction.editReply({
+          flags: MessageFlags.IsComponentsV2,
+          components: [container],
+        });
       }
 
       // Pick 2 random users
@@ -66,7 +75,8 @@ export const commandBase = {
           new TextDisplayBuilder({
             content: `${user1} and ${user2} are now married!`,
           })
-        );
+        )
+        .setAccentColor(Colors.Green);
 
       await interaction.editReply({
         flags: MessageFlags.IsComponentsV2,
