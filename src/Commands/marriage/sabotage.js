@@ -33,9 +33,15 @@ export const commandBase = {
 
     const married = await getActiveMarriage(db, userId);
     if (married) {
-      return interaction.editReply(
-        "❌ You can't sabotage marriages while you're married."
+      const marriedContainer = new ContainerBuilder().addTextDisplayComponents(
+        new TextDisplayBuilder({
+          content: "❌ You can't sabotage marriages while you're married.",
+        })
       );
+      return interaction.editReply({
+        flags: MessageFlags.IsComponentsV2,
+        components: [marriedContainer],
+      });
     }
 
     const users = db.collection("users");
@@ -48,9 +54,15 @@ export const commandBase = {
       const diffMin = Math.ceil(
         (new Date(userData.sabotageCooldownUntil) - now) / 60000
       );
-      return interaction.editReply(
-        `🕒 You must wait **${diffMin} minutes** before sabotaging again.`
+      const cooldownContainer = new ContainerBuilder().addTextDisplayComponents(
+        new TextDisplayBuilder({
+          content: `⏳ You must wait **${diffMin} minutes** before sabotaging again.`,
+        })
       );
+      return interaction.editReply({
+        flags: MessageFlags.IsComponentsV2,
+        components: [cooldownContainer],
+      });
     }
 
     const roll = new DiceRoll("1d20");
@@ -66,14 +78,30 @@ export const commandBase = {
     );
 
     if (result !== 20) {
-      return interaction.editReply(
-        `🎲 You rolled **${result}**. You need a **natural 20** to succeed.\nTry again in ${cooldownDuration} minutes.`
-      );
+      return interaction.editReply({
+        flags: MessageFlags.IsComponentsV2,
+        components: [
+          new ContainerBuilder().addTextDisplayComponents(
+            new TextDisplayBuilder({
+              content: `🎲 You rolled **${result}**. You need a **natural 20** to succeed.\nTry again in ${cooldownDuration} minutes.`,
+            })
+          ),
+        ],
+      });
     }
 
     const marriages = await getAllActiveMarriages(db);
     if (marriages.length === 0) {
-      return interaction.editReply("🥹 There are no marriages to sabotage.");
+      return interaction.editReply({
+        flags: MessageFlags.IsComponentsV2,
+        components: [
+          new ContainerBuilder().addTextDisplayComponents(
+            new TextDisplayBuilder({
+              content: "🥹 There are no marriages to sabotage.",
+            })
+          ),
+        ],
+      });
     }
 
     const randomMarriage =
