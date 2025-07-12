@@ -2,7 +2,6 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import {
   MessageFlags,
   ContainerBuilder,
-  ComponentType,
   TextDisplayBuilder,
   SeparatorBuilder,
   SeparatorSpacingSize,
@@ -10,7 +9,6 @@ import {
 import { connectToDatabase } from "../../Base/mongodb.js";
 import {
   createMarriage,
-  getActiveMarriage,
   getAllActiveMarriages,
 } from "../../schemas/marriage.js";
 
@@ -21,7 +19,11 @@ export const commandBase = {
 
   cooldown: 0,
   ownerOnly: false,
-
+  /**
+   * Handles the slash command interaction.
+   * @param {import('discord.js').Client} client - The Discord bot client
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction - The interaction object
+   */
   async slashRun(client, interaction) {
     try {
       await interaction.deferReply();
