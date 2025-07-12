@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { EmbedBuilder } from "discord.js";
-import { connectToDatabase } from "../mongo.js";
+import { connectToDatabase } from "../../Base/mongodb.js";
 
 export const commandBase = {
   slashData: new SlashCommandBuilder()
@@ -42,7 +42,7 @@ export const commandBase = {
     const embed = new EmbedBuilder()
       .setTitle("🏆 Longest Lasting Marriages")
       .setDescription(description)
-      .setColor("Gold");
+      .setColor("Green");
 
     await interaction.reply({ embeds: [embed] });
   },
