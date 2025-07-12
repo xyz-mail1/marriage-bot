@@ -5,6 +5,7 @@ import {
   SeparatorBuilder,
   SeparatorSpacingSize,
   MessageFlags,
+  Colors,
 } from "discord.js";
 import { connectToDatabase } from "../../Base/mongodb.js";
 import { getActiveMarriage } from "../../schemas/marriage.js";
