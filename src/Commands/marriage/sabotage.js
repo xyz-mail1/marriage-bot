@@ -72,7 +72,8 @@ export const commandBase = {
     // Success — end a random marriage
     const marriages = await getAllActiveMarriages(db);
     if (marriages.length === 0) {
-      return interaction.editReply("🥹 There are no marriages to sabotage.");
+      await interaction.editReply("🥹 There are no marriages to sabotage.");
+      return;
     }
 
     const randomMarriage =
@@ -86,6 +87,6 @@ export const commandBase = {
       )
       .setColor("DarkRed");
 
-    return interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   },
 };

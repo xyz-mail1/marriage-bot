@@ -12,6 +12,7 @@ export const commandBase = {
   ownerOnly: false,
 
   async slashRun(client, interaction) {
+    await interaction.deferReply();
     const db = await connectToDatabase();
     const guild = interaction.guild;
     const members = await guild.members.fetch();
@@ -26,7 +27,7 @@ export const commandBase = {
     }
 
     if (unmarried.length < 2) {
-      return interaction.reply(
+      await interaction.editReply(
         "❌ Not enough unmarried members to create a marriage."
       );
     }
@@ -45,6 +46,6 @@ export const commandBase = {
       )
       .setColor("Gold");
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   },
 };

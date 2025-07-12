@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { EmbedBuilder } from "discord.js";
 import { DiceRoll } from "rpg-dice-roller";
-import { connectToDatabase } from "../mongo.js";
+import { connectToDatabase } from "../../Base/mongodb.js";
 import { getActiveMarriage, endMarriage } from "../../schemas/marriage.js";
 import {
   updateLastDivorceAttempt,
@@ -68,7 +68,7 @@ export const commandBase = {
         .setTitle("💔 Divorce Success!")
         .setDescription(`You rolled **${result}**. Your marriage has ended.`)
         .setColor("Red");
-      return interaction.editReply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
     } else {
       // Failure
       await updateLastDivorceAttempt(db, userId);
@@ -79,7 +79,7 @@ export const commandBase = {
           `You rolled **${result}**. You need a 15 or higher to divorce.\nTry again in 24 hours.`
         )
         .setColor("Orange");
-      return interaction.editReply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed] });
     }
   },
 };
