@@ -20,9 +20,7 @@ import {
 export const commandBase = {
   slashData: new SlashCommandBuilder()
     .setName("sabotage")
-    .setDescription(
-      "Try to sabotage a random marriage by rolling a natural 20"
-    ),
+    .setDescription("Try to sabotage a random marriage"),
 
   cooldown: 0,
   ownerOnly: false,
@@ -39,7 +37,8 @@ export const commandBase = {
       const marriedContainer = new ContainerBuilder()
         .addTextDisplayComponents(
           new TextDisplayBuilder({
-            content: "❌ You can't sabotage marriages while you're married.",
+            content:
+              "❌ You can't sabotage marriages cause you're not a virgin.",
           })
         )
         .setAccentColor(Colors.Red);
@@ -91,7 +90,7 @@ export const commandBase = {
           new ContainerBuilder()
             .addTextDisplayComponents(
               new TextDisplayBuilder({
-                content: `🎲 You rolled **${result}**. You need a **natural 20** to succeed.\nTry again in ${cooldownDuration} minutes.`,
+                content: `🎲 You rolled **${result}**. You need a **20** to succeed.\nTry again in ${cooldownDuration} minutes.`,
               })
             )
             .setAccentColor(Colors.Red),
@@ -124,7 +123,7 @@ export const commandBase = {
     });
 
     const description = new TextDisplayBuilder({
-      content: `You rolled a **natural 20** and ended a marriage between <@${randomMarriage.user1Id}> and <@${randomMarriage.user2Id}>!`,
+      content: `You rolled a **20** and ended a marriage between <@${randomMarriage.user1Id}> and <@${randomMarriage.user2Id}>!`,
     });
 
     const separator = new SeparatorBuilder({
