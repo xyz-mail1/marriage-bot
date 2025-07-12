@@ -1,5 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { EmbedBuilder } from "discord.js";
+import {
+  MessageFlags,
+  ContainerBuilder,
+  ComponentType,
+  TextDisplayBuilder,
+  SeparatorBuilder,
+  SeparatorSpacingSize,
+} from "discord.js";
 import { connectToDatabase } from "../../Base/mongodb.js";
 import { createMarriage, getActiveMarriage } from "../../schemas/marriage.js";
 
@@ -39,13 +46,26 @@ export const commandBase = {
     // Save to DB
     await createMarriage(db, user1.user.id, user2.user.id);
 
-    const embed = new EmbedBuilder()
-      .setTitle("💍 A New Marriage!")
-      .setDescription(
-        `${user1} and ${user2} are now married!\nLet’s see how long it lasts...`
-      )
-      .setColor("Gold");
+    const heading = new TextDisplayBuilder({
+      content: `## 💍 New Marriage!!`,
+    });
+    const description = new TextDisplayBuilder({
+      content: `${user1} and ${user2} are now married!`,
+    });
 
-    await interaction.editReply({ embeds: [embed] });
+    const separator = new SeparatorBuilder({
+      spacing: SeparatorSpacingSize.Large,
+      divider: true,
+    });
+
+    const container = new ContainerBuilder()
+      .addTextDisplayComponents(heading)
+      .addSeparatorComponents(separator)
+      .addTextDisplayComponents(description);
+
+    await interaction.editReply({
+      flags: MessageFlags.IsComponentsV2,
+      components: [container],
+    });
   },
 };
