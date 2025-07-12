@@ -39,3 +39,17 @@ export async function endMarriage(db, user1Id, user2Id) {
     }
   );
 }
+
+export async function updateLastDivorceAttempt(db, userId) {
+  return db
+    .collection("users")
+    .updateOne(
+      { userId },
+      { $set: { lastDivorceAttempt: new Date() } },
+      { upsert: true }
+    );
+}
+
+export async function getUserData(db, userId) {
+  return db.collection("users").findOne({ userId });
+}
