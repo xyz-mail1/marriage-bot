@@ -1,0 +1,50 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { EmbedBuilder } from "discord.js";
+import { connectToDatabase } from "../../Base/mongodb.js";
+import { createMarriage, getActiveMarriage } from "../../schemas/marriage.js";
+
+export const commandBase = {
+  slashData: new SlashCommandBuilder()
+    .setName("marry")
+    .setDescription("Randomly marry two members!"),
+
+  cooldown: 0,
+  ownerOnly: false,
+
+  async slashRun(client, interaction) {
+    const db = await connectToDatabase();
+    const guild = interaction.guild;
+    const members = await guild.members.fetch();
+
+    // Filter out bots and married users
+    const allMembers = [...members.values()].filter((m) => !m.user.bot);
+    const unmarried = [];
+
+    for (const member of allMembers) {
+      const marriage = await getActiveMarriage(db, member.user.id);
+      if (!marriage) unmarried.push(member);
+    }
+
+    if (unmarried.length < 2) {
+      return interaction.reply(
+        "❌ Not enough unmarried members to create a marriage."
+      );
+    }
+
+    // Pick 2 random users
+    const shuffled = unmarried.sort(() => 0.5 - Math.random());
+    const [user1, user2] = shuffled;
+
+    // Save to DB
+    await createMarriage(db, user1.user.id, user2.user.id);
+
+    const embed = new EmbedBuilder()
+      .setTitle("💍 A New Marriage!")
+      .setDescription(
+        `${user1} and ${user2} are now married!\nLet’s see how long it lasts...`
+      )
+      .setColor("Gold");
+
+    await interaction.reply({ embeds: [embed] });
+  },
+};

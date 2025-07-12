@@ -1,0 +1,21 @@
+{
+  "main": "src/Base/app.js",
+  "scripts": {
+    "start": "node src/Base/app.js"
+  },
+  "type": "module",
+  "author": "memte.",
+  "license": "MIT",
+  "dependencies": {
+    "canvacord": "^6.0.2",
+    "discord.js": "^14.21.0",
+    "mongodb": "^6.17.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@dotenvx/dotenvx": "^1.45.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
