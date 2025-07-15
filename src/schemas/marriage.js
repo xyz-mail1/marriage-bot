@@ -53,3 +53,38 @@ export async function updateLastDivorceAttempt(db, userId) {
 export async function getUserData(db, userId) {
   return db.collection("users").findOne({ userId });
 }
+
+// Get or create user data
+export async function getOrCreateUserData(db, userId) {
+  const users = db.collection("users");
+  let data = await users.findOne({ userId });
+
+  if (!data) {
+    data = {
+      userId,
+      deathTier: 0,
+      jailTier: 0,
+      killPartnerCooldownUntil: null,
+    };
+    await users.insertOne(data);
+  } else {
+    // Backfill any missing fields for existing users
+    const update = {};
+    if (data.deathTier === undefined) update.deathTier = 0;
+    if (data.jailTier === undefined) update.jailTier = 0;
+    if (data.killPartnerCooldownUntil === undefined)
+      update.killPartnerCooldownUntil = null;
+
+    if (Object.keys(update).length > 0) {
+      await users.updateOne({ userId }, { $set: update });
+      data = { ...data, ...update };
+    }
+  }
+
+  return data;
+}
+
+export async function incrementTier(db, userId, field) {
+  const users = db.collection("users");
+  await users.updateOne({ userId }, { $inc: { [field]: 1 } }, { upsert: true });
+}
